@@ -1,0 +1,1490 @@
+/* ================================================================
+   FLORES AMARILLAS — style.css v9
+   Cambios principales:
+     • Fondo global via fondo.jpg en body/#app-container (no en section)
+     • Regla section sin background → hereda el fondo del body
+     • Tira fotográfica: overflow:hidden + dimensiones fijas (fix v8)
+     • Placeholders numéricos visibles en decoraciones/stickers
+   ================================================================ */
+
+
+/* ----------------------------------------------------------------
+   1. CUSTOM PROPERTIES
+   ---------------------------------------------------------------- */
+:root {
+    --am-vivo: #FFD700;
+    --am-medio: #FFCA28;
+    --am-oscuro: #F9A825;
+    --dorado: #C8960C;
+    --dorado-osc: #9A6F00;
+
+    --verde-h: #5A7A3A;
+    --verde-osc: #3D5928;
+
+    --papel: #F2E4C0;
+    --papel-borde: #C9A96E;
+
+    --tinta: #1A3A5C;
+    --texto-osc: #2C1A0E;
+    --texto-med: #5C3D1E;
+    --texto-suave: #8B6040;
+
+    --w-rosa: rgba(244, 184, 193, .84);
+    --w-lavanda: rgba(197, 184, 232, .84);
+    --w-menta: rgba(168, 216, 200, .84);
+    --w-amarillo: rgba(249, 228, 160, .84);
+    --w-melocoton: rgba(247, 197, 159, .84);
+    --w-celeste: rgba(180, 220, 240, .84);
+
+    --cinta: rgba(255, 255, 255, .30);
+
+    --f-titulo: 'Playfair Display', Georgia, serif;
+    --f-script: 'Dancing Script', cursive;
+    --f-mano: 'Caveat', cursive;
+
+    --sobre-w: 300px;
+    --sobre-h: 200px;
+    --tira-vel: 34s;
+    --tira-w: 108px;
+    --tira-h: 480px;
+}
+
+
+/* ----------------------------------------------------------------
+   2. RESET & BASE
+   ---------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    width: 100%;
+    height: 100%;
+}
+
+/*
+  ================================================================
+  FONDO GLOBAL — ÚNICA FUENTE DE VERDAD
+  ================================================================
+  El usuario coloca fondo.jpg en la misma carpeta que index.html.
+  background-attachment: fixed mantiene el fondo estático mientras
+  el contenido de las escenas se anima sobre él.
+
+  Si fondo.jpg no existe, el color de fallback #FFFDE7 (amarillo
+  claro) garantiza que la experiencia siga siendo legible.
+  ================================================================
+*/
+body {
+    width: 100%;
+    height: 100%;
+    font-family: var(--f-mano);
+    color: var(--texto-osc);
+    overflow: hidden;
+
+    /* ── FONDO GLOBAL ── */
+    background-color: #FFFDE7;
+    /* fallback si fondo.jpg no carga  */
+    background-image: url('fondo.jpg');
+    /* ← el usuario pone aquí su imagen */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+
+/*
+  Las secciones NO definen background propio.
+  Heredan el fondo del body a través de su transparencia natural.
+  Esto es lo que permite que fondo.jpg se vea como lienzo único
+  detrás de todas las escenas.
+*/
+section {
+    /* Sin background — heredan el fondo del body */
+    background: transparent;
+}
+
+:focus-visible {
+    outline: 3px solid var(--am-vivo);
+    outline-offset: 4px;
+    border-radius: 4px;
+}
+
+button {
+    cursor: pointer;
+    font-family: inherit;
+}
+
+img {
+    display: block;
+}
+
+figure {
+    margin: 0;
+}
+
+
+/* ----------------------------------------------------------------
+   3. MARIPOSAS GLOBALES
+   ---------------------------------------------------------------- */
+#mariposas-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 200;
+    overflow: hidden;
+}
+
+.mariposa-gif {
+    position: absolute;
+    width: 52px;
+    height: auto;
+    opacity: 0;
+    filter: drop-shadow(1px 2px 4px rgba(0, 0, 0, .18));
+}
+
+.mariposa-gif[data-lane="0"] {
+    top: 14%;
+    animation:
+        vuelo-der 18s linear 1s infinite,
+        ondula-v 5s ease-in-out infinite,
+        aleteo .42s ease-in-out infinite alternate,
+        fade-in-mar .8s ease 1s forwards;
+}
+
+.mariposa-gif[data-lane="1"] {
+    top: 62%;
+    width: 44px;
+    animation:
+        vuelo-izq 23s linear 0s infinite,
+        ondula-v 6s ease-in-out 1s infinite,
+        aleteo .50s ease-in-out infinite alternate,
+        fade-in-mar .8s ease 0s forwards;
+    transform: scaleX(-1);
+}
+
+.mariposa-gif[data-lane="2"] {
+    top: 30%;
+    width: 36px;
+    animation:
+        vuelo-der 14s linear 7s infinite,
+        ondula-v 4s ease-in-out 2s infinite,
+        aleteo .35s ease-in-out infinite alternate,
+        fade-in-mar .8s ease 7s forwards;
+}
+
+.mariposa-gif[data-lane="3"] {
+    top: 80%;
+    width: 48px;
+    animation:
+        vuelo-izq 27s linear 4s infinite,
+        ondula-v 7s ease-in-out infinite,
+        aleteo .46s ease-in-out infinite alternate,
+        fade-in-mar .8s ease 4s forwards;
+    transform: scaleX(-1);
+}
+
+
+/* ----------------------------------------------------------------
+   4. DECORACIONES GLOBALES
+   ---------------------------------------------------------------- */
+.washi {
+    position: absolute;
+    height: 22px;
+    border-radius: 2px;
+    z-index: 30;
+    pointer-events: none;
+    box-shadow: 1px 2px 5px rgba(0, 0, 0, .12);
+}
+
+.washi::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-image: repeating-linear-gradient(55deg, transparent, transparent 4px,
+            rgba(255, 255, 255, .26) 4px, rgba(255, 255, 255, .26) 5px);
+}
+
+.esquina-scrap {
+    position: absolute;
+    width: 56px;
+    height: 56px;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.esquina-scrap::before,
+.esquina-scrap::after {
+    content: '';
+    position: absolute;
+    background: var(--w-menta);
+    border-radius: 2px;
+    opacity: .8;
+    width: 42px;
+    height: 13px;
+}
+
+.esquina-scrap--tl {
+    top: 14px;
+    left: 14px;
+}
+
+.esquina-scrap--tr {
+    top: 14px;
+    right: 14px;
+    transform: scaleX(-1);
+}
+
+.esquina-scrap--bl {
+    bottom: 14px;
+    left: 14px;
+    transform: scaleY(-1);
+}
+
+.esquina-scrap--br {
+    bottom: 14px;
+    right: 14px;
+    transform: scale(-1);
+}
+
+.esquina-scrap--tl::before,
+.esquina-scrap--tr::before {
+    transform: rotate(-45deg) translate(-8px, 10px);
+}
+
+.esquina-scrap--tl::after,
+.esquina-scrap--tr::after {
+    transform: rotate(45deg) translate(10px, -8px);
+}
+
+.esquina-scrap--bl::before,
+.esquina-scrap--br::before {
+    transform: rotate(-45deg) translate(-8px, 10px);
+}
+
+.esquina-scrap--bl::after,
+.esquina-scrap--br::after {
+    transform: rotate(45deg) translate(10px, -8px);
+}
+
+
+/* ================================================================
+   5. APP CONTAINER
+   ================================================================ */
+#app-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+
+/* ================================================================
+   6. ESCENA 1 — BIENVENIDA
+   ================================================================ */
+#escena-1 {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    will-change: opacity;
+}
+
+.escena-1__contenido {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.4rem;
+    text-align: center;
+    padding: 2.4rem 2.8rem;
+    max-width: 520px;
+    background: rgba(255, 253, 231, 0.82);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 4px;
+    border: 1px solid rgba(180, 140, 60, .22);
+    box-shadow: 0 8px 40px rgba(30, 15, 0, .16), inset 0 0 0 3px rgba(220, 180, 80, .10);
+    transform: rotate(-.5deg);
+}
+
+.escena-1__contenido::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 4px;
+    background-image: repeating-linear-gradient(transparent, transparent 27px,
+            rgba(160, 120, 60, .06) 27px, rgba(160, 120, 60, .06) 28px);
+    pointer-events: none;
+}
+
+.escena-1__titulo {
+    position: relative;
+    font-family: var(--f-titulo);
+    font-size: clamp(1.9rem, 5.8vw, 3.2rem);
+    font-weight: 700;
+    line-height: 1.2;
+    background: linear-gradient(145deg, #2C1A0E 0%, #7A4E00 55%, #C8960C 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.escena-1__titulo em {
+    font-family: var(--f-script);
+    font-size: 1.14em;
+    font-style: italic;
+    display: block;
+}
+
+.escena-1__subtitulo {
+    font-family: var(--f-titulo);
+    font-size: clamp(.88rem, 2.2vw, 1.08rem);
+    font-style: italic;
+    color: var(--texto-suave);
+    letter-spacing: .04em;
+}
+
+#btn-empezar {
+    padding: .95rem 2.7rem;
+    border: none;
+    border-radius: 50px;
+    font-family: var(--f-mano);
+    font-size: clamp(1rem, 2.6vw, 1.15rem);
+    font-weight: 600;
+    letter-spacing: .04em;
+    color: var(--texto-osc);
+    background: linear-gradient(148deg, #FFE566, var(--am-vivo) 40%, var(--am-oscuro));
+    border: 2px solid rgba(160, 115, 0, .25);
+    box-shadow: 0 4px 0 rgba(130, 85, 0, .22), 0 6px 20px rgba(190, 140, 10, .28),
+        inset 0 1px 0 rgba(255, 255, 255, .4);
+    animation: latido 2.8s ease-in-out infinite;
+    transition: transform .22s, box-shadow .22s;
+}
+
+#btn-empezar:hover {
+    transform: translateY(-3px) scale(1.04);
+    animation-play-state: paused;
+}
+
+#btn-empezar:active {
+    transform: translateY(1px) scale(.97);
+}
+
+
+/* ================================================================
+   7. ESCENA 2 — SOBRE
+   ================================================================ */
+#escena-2 {
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+}
+
+.escena-2__contenido {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem;
+}
+
+.escena-2__subtitulo {
+    font-family: var(--f-titulo);
+    font-size: clamp(1rem, 2.8vw, 1.28rem);
+    color: var(--texto-med);
+    text-align: center;
+    line-height: 1.5;
+    letter-spacing: .03em;
+    background: rgba(255, 253, 231, .82);
+    padding: .6rem 1.5rem;
+    border-radius: 30px;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(180, 140, 60, .15);
+}
+
+.escena-2__subtitulo em {
+    font-family: var(--f-script);
+    font-size: 1.2em;
+    color: var(--verde-osc);
+}
+
+/* Sobre */
+.sobre-contenedor {
+    position: relative;
+    width: var(--sobre-w);
+    height: var(--sobre-h);
+    perspective: 1000px;
+    cursor: pointer;
+    filter: drop-shadow(4px 12px 38px rgba(40, 20, 0, .30));
+    transition: filter .4s, transform .3s;
+}
+
+.sobre-contenedor:hover {
+    transform: translateY(-5px) scale(1.018);
+}
+
+/* z-1 Espalda */
+.sobre-espalda {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(168deg, #F8EAA8, #EDD9A3 55%, #E2C870);
+    border-radius: 3px 3px 6px 6px;
+    border: 1px solid rgba(180, 140, 40, .25);
+    box-shadow: inset 0 -4px 12px rgba(0, 0, 0, .08);
+}
+
+.sobre-espalda::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background:
+        linear-gradient(to bottom right, #EDD87A 0%, #EDD87A 50%, transparent 50%),
+        linear-gradient(to bottom left, #E2CC70 0%, #E2CC70 50%, transparent 50%);
+    background-size: 50% 52%, 50% 52%;
+    background-position: left top, right top;
+    background-repeat: no-repeat;
+    opacity: .82;
+}
+
+.sobre-espalda::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 52%;
+    background:
+        linear-gradient(to top right, #CCB020 0%, #CCB020 50%, transparent 50%),
+        linear-gradient(to top left, #E2CC70 0%, #E2CC70 50%, transparent 50%);
+    background-size: 50% 100%, 50% 100%;
+    background-position: left, right;
+    background-repeat: no-repeat;
+    border-radius: 0 0 5px 5px;
+    opacity: .75;
+}
+
+/* z-2 Carta interior */
+.carta {
+    position: absolute;
+    z-index: 2;
+    width: calc(var(--sobre-w) * .80);
+    height: var(--sobre-h);
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(0);
+    background: linear-gradient(168deg, #FFFEF8, #FFF8E8);
+    border-radius: 3px 3px 0 0;
+    border: 1px solid rgba(200, 170, 80, .20);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    font-family: var(--f-script);
+    color: var(--texto-med);
+    transition: transform 1s cubic-bezier(.34, 1.3, .64, 1) .6s;
+    will-change: transform;
+    pointer-events: none;
+}
+
+.carta__motivo {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--am-oscuro);
+    position: relative;
+}
+
+.carta__motivo::after {
+    content: '';
+    position: absolute;
+    inset: 5px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--am-medio), var(--am-oscuro));
+}
+
+.carta__preview-texto {
+    font-size: .92rem;
+    color: var(--texto-suave);
+}
+
+.sobre-contenedor.abierto .carta {
+    transform: translateX(-50%) translateY(-120px);
+}
+
+/* z-3 Frente sólido */
+.sobre-frente {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    border-radius: 3px 3px 6px 6px;
+    border: 1px solid rgba(180, 140, 40, .20);
+    pointer-events: none;
+    background:
+        repeating-linear-gradient(125deg, rgba(255, 255, 150, .06) 0px,
+            rgba(255, 255, 150, .06) 1px, transparent 1px, transparent 6px),
+        linear-gradient(163deg, #FFF8B0, #FFE64A 40%, #FFD000 75%, #F0B800);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 1.2rem;
+}
+
+.sobre-frente::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 50%;
+    background: linear-gradient(to bottom right,
+            rgba(255, 240, 80, 0) 50%, rgba(160, 110, 0, .14) 50%);
+    pointer-events: none;
+}
+
+.sobre-frente::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(to bottom left,
+            rgba(255, 240, 80, 0) 50%, rgba(200, 150, 0, .18) 50%);
+    pointer-events: none;
+}
+
+.sobre-frente__sello {
+    position: relative;
+    z-index: 4;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 32% 30%, #D44040, #8B0B0B 65%, #5A0808);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .38), inset 0 3px 5px rgba(255, 120, 100, .32),
+        inset 0 -2px 4px rgba(0, 0, 0, .45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: 3px solid rgba(200, 140, 10, .50);
+    outline-offset: 2px;
+    transition: transform .4s;
+}
+
+.sobre-frente__sello::before {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255, 180, 160, .30);
+    pointer-events: none;
+}
+
+.sobre-contenedor:hover .sobre-frente__sello {
+    transform: scale(1.1) rotate(-10deg);
+}
+
+.sello__inicial {
+    font-family: var(--f-script);
+    font-size: 1.4rem;
+    color: rgba(255, 215, 195, .92);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, .55);
+    pointer-events: none;
+    user-select: none;
+    position: relative;
+    z-index: 1;
+}
+
+.matasellos {
+    position: absolute;
+    bottom: 14px;
+    left: 16px;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 2px solid rgba(80, 40, 0, .45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(-18deg);
+    z-index: 4;
+    background: rgba(80, 40, 120, .08);
+    box-shadow: inset 0 0 0 2px rgba(80, 40, 0, .12);
+}
+
+.matasellos::before {
+    content: '';
+    position: absolute;
+    inset: 5px;
+    border-radius: 50%;
+    border: 1px solid rgba(80, 40, 0, .35);
+    pointer-events: none;
+}
+
+.matasellos__texto {
+    font-family: var(--f-mano);
+    font-size: .38rem;
+    color: rgba(60, 30, 0, .55);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    width: 100%;
+    text-align: center;
+    line-height: 1;
+    padding: 0 4px;
+}
+
+/* z-4 Solapa */
+.solapa {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--sobre-w);
+    height: calc(var(--sobre-h) * .52);
+    z-index: 4;
+    background: linear-gradient(150deg, #FFEE8A, #FFCC00 45%, #E8A800 80%, #C89000);
+    border-radius: 3px 3px 0 0;
+    border: 1px solid rgba(180, 140, 40, .22);
+    border-bottom: none;
+    clip-path: polygon(0% 0%, 100% 0%, 50% 92%);
+    transform-origin: top center;
+    transition: transform .9s cubic-bezier(.4, 0, .2, 1);
+    will-change: transform;
+    pointer-events: none;
+    box-shadow: inset 0 -10px 20px rgba(0, 0, 0, .10);
+}
+
+.solapa::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(255, 255, 200, .18), transparent 60%);
+    clip-path: inherit;
+    pointer-events: none;
+}
+
+.solapa::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 10%;
+    right: 10%;
+    height: 8px;
+    background: linear-gradient(to top, rgba(0, 0, 0, .14), transparent);
+    pointer-events: none;
+}
+
+.sobre-contenedor.abierto .solapa {
+    transform: rotateX(180deg);
+    z-index: 1;
+}
+
+.escena-2__hint {
+    font-family: var(--f-mano);
+    font-size: .82rem;
+    font-weight: 300;
+    color: var(--verde-osc);
+    letter-spacing: .07em;
+    opacity: .7;
+    animation: flotar 3s ease-in-out infinite;
+    background: rgba(255, 253, 231, .75);
+    padding: .3rem 1rem;
+    border-radius: 20px;
+    border: 1px solid rgba(100, 130, 80, .12);
+}
+
+
+/* ================================================================
+   8. ESCENA 3 — SCRAPBOOK VINTAGE
+   ================================================================ */
+#escena-3 {
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    overflow: visible;
+    /* la tira puede sobresalir del área del pergamino */
+}
+
+/* Lienzo: sin overflow:hidden para que la tira sea collage libre */
+.escena3-lienzo {
+    position: relative;
+    z-index: 2;
+    width: min(560px, 92vw);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ── PERGAMINO ── */
+.pergamino {
+    position: relative;
+    z-index: 5;
+    width: 100%;
+    background-color: var(--papel);
+    background-image:
+        radial-gradient(ellipse 60% 40% at 20% 30%, rgba(180, 130, 60, .09) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 50% at 80% 70%, rgba(160, 110, 40, .08) 0%, transparent 65%),
+        radial-gradient(ellipse 80% 30% at 50% 90%, rgba(140, 100, 30, .07) 0%, transparent 60%),
+        repeating-linear-gradient(180deg, transparent, transparent 26px,
+            rgba(150, 110, 50, .05) 26px, rgba(150, 110, 50, .05) 27px);
+    border: 1px solid var(--papel-borde);
+    box-shadow: 4px 6px 0 rgba(160, 110, 40, .16), 8px 12px 0 rgba(140, 90, 20, .09),
+        12px 18px 32px rgba(30, 15, 0, .26);
+    padding: 2.4rem 2.2rem 2rem;
+    border-radius: 3px;
+    transform: rotate(.3deg);
+    max-height: 82vh;
+    overflow-y: auto;
+    overflow-x: visible;
+    -webkit-overflow-scrolling: touch;
+}
+
+.pergamino::-webkit-scrollbar {
+    width: 0;
+}
+
+.pergamino {
+    scrollbar-width: none;
+}
+
+.pergamino::before {
+    content: '';
+    position: absolute;
+    top: -13px;
+    left: -2px;
+    right: -2px;
+    height: 17px;
+    background: var(--papel);
+    clip-path: polygon(0% 55%, 2% 18%, 5% 70%, 8% 28%, 11% 62%, 14% 12%,
+            17% 68%, 20% 24%, 23% 58%, 26% 8%, 29% 70%, 32% 26%,
+            35% 62%, 38% 16%, 41% 66%, 44% 20%, 47% 72%, 50% 28%,
+            53% 64%, 56% 10%, 59% 68%, 62% 22%, 65% 58%, 68% 14%,
+            71% 70%, 74% 26%, 77% 62%, 80% 18%, 83% 66%, 86% 22%,
+            89% 60%, 92% 16%, 95% 64%, 98% 20%, 100% 48%,
+            100% 100%, 0% 100%);
+    z-index: 6;
+    pointer-events: none;
+}
+
+.pergamino::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: linear-gradient(to bottom, rgba(120, 80, 20, .14), transparent);
+    z-index: 6;
+    pointer-events: none;
+}
+
+.washi--p-tl {
+    top: -11px;
+    left: 30px;
+    width: 72px;
+    background: var(--w-rosa);
+    transform: rotate(-8deg);
+}
+
+.washi--p-tr {
+    top: -11px;
+    right: 50px;
+    width: 72px;
+    background: var(--w-lavanda);
+    transform: rotate(6deg);
+}
+
+.washi--p-bm {
+    bottom: -11px;
+    left: 50%;
+    width: 80px;
+    background: var(--w-amarillo);
+    transform: translateX(-50%) rotate(-3deg);
+}
+
+.pergamino__cabecera {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1.2rem;
+}
+
+.pergamino__fecha {
+    font-family: var(--f-mano);
+    font-size: .8rem;
+    color: var(--texto-suave);
+    letter-spacing: .1em;
+    opacity: .7;
+}
+
+.pergamino__cuerpo {
+    font-family: var(--f-mano);
+    font-size: clamp(1.05rem, 2.5vw, 1.22rem);
+    color: var(--tinta);
+    line-height: 1.95;
+}
+
+.carta-linea {
+    opacity: 0;
+    margin-bottom: .18rem;
+    will-change: opacity, transform;
+}
+
+.carta-linea--esp {
+    margin-bottom: 1rem;
+}
+
+.carta-linea--firma {
+    margin-top: 1.2rem;
+    font-family: var(--f-script);
+    font-size: clamp(1.2rem, 3vw, 1.45rem);
+    color: var(--texto-osc);
+}
+
+.gif-cierre-wrap {
+    opacity: 0;
+    margin-top: 1.8rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .5rem;
+    transition: opacity .9s ease;
+}
+
+.gif-cierre-wrap.visible {
+    opacity: 1;
+}
+
+.gif-cierre {
+    width: 100%;
+    max-width: 220px;
+    border-radius: 6px;
+    border: 5px solid #fff;
+    box-shadow: 3px 5px 16px rgba(30, 15, 0, .22), 0 0 0 1px rgba(180, 140, 60, .2);
+    transform: rotate(-2deg);
+}
+
+.gif-cierre__leyenda {
+    font-family: var(--f-script);
+    font-size: 1.05rem;
+    color: var(--texto-suave);
+    font-style: italic;
+    letter-spacing: .04em;
+}
+
+
+/* ================================================================
+   TIRA FOTOGRÁFICA — overflow:hidden aplicado (fix crítico v8)
+   Dimensiones fijas via custom properties para que el recorte
+   funcione correctamente sobre el carrete animado.
+   ================================================================ */
+.tira-vintage {
+    position: absolute;
+    top: 6%;
+    right: -52px;
+
+    /* Dimensiones fijas: necesarias para que overflow:hidden recorte */
+    width: var(--tira-w);
+    /* 108px */
+    height: var(--tira-h);
+    /* 480px */
+
+    /* ── FIX CRÍTICO: ventana de recorte del carrete ── */
+    overflow: hidden;
+
+    background: #0A0A0A;
+    border-radius: 4px;
+    /* esquinas suaves estilo scrapbook */
+    box-shadow: -6px 0 20px rgba(0, 0, 0, .50), 6px 0 20px rgba(0, 0, 0, .50);
+    transform: rotate(-9deg);
+    transform-origin: top right;
+    z-index: 15;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Cinta adhesiva 1 — translúcida superior */
+.tira-vintage::before {
+    content: '';
+    position: absolute;
+    top: 14px;
+    left: -22px;
+    width: 152px;
+    height: 18px;
+    background: var(--cinta);
+    border: 1px solid rgba(255, 255, 255, .16);
+    border-radius: 2px;
+    transform: rotate(13deg);
+    z-index: 20;
+    box-shadow: 1px 2px 6px rgba(0, 0, 0, .18);
+}
+
+/* Cinta adhesiva 2 — amarillenta inferior */
+.tira-vintage::after {
+    content: '';
+    position: absolute;
+    bottom: 22px;
+    left: -16px;
+    width: 140px;
+    height: 18px;
+    background: rgba(255, 240, 200, .26);
+    border: 1px solid rgba(255, 210, 140, .20);
+    border-radius: 2px;
+    transform: rotate(-7deg);
+    z-index: 20;
+    box-shadow: 1px 2px 6px rgba(0, 0, 0, .15);
+}
+
+/* Perforaciones del rollo */
+.tira-vintage__borde {
+    position: relative;
+    z-index: 2;
+    height: 18px;
+    flex-shrink: 0;
+    background:
+        repeating-radial-gradient(ellipse 6px 6px at center, #000 0%, #000 50%, transparent 50%) repeat-x;
+    background-size: 16px 12px;
+    background-position: 6px 3px;
+}
+
+.tira-vintage__borde--top {
+    border-bottom: 1px solid #1e1e1e;
+}
+
+.tira-vintage__borde--bot {
+    border-top: 1px solid #1e1e1e;
+}
+
+/*
+  Carrete: translateY animado en bucle.
+  El grupo A ocupa el primer 50% de altura total,
+  el grupo B (copia) el segundo 50%.
+  Al llegar a -50%, el reset visual es invisible.
+*/
+.tira-vintage__carrete {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 4px 5px;
+    animation: tira-sube var(--tira-vel) linear infinite;
+    will-change: transform;
+}
+
+.tira-foto-celda {
+    flex-shrink: 0;
+    width: 90px;
+    aspect-ratio: 3/4;
+    overflow: hidden;
+    background: #151515;
+    border: 1px solid #222;
+    border-radius: 1px;
+}
+
+.tira-foto-celda--incl {
+    transform: rotate(1.4deg);
+}
+
+.tira-foto-celda img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: sepia(18%) contrast(1.06) brightness(.97);
+    transition: filter .5s;
+}
+
+.tira-foto-celda:hover img {
+    filter: sepia(0%) contrast(1.1) brightness(1.02);
+}
+
+/* Decoraciones transparentes Escena 3 */
+.decoracion-transparente {
+    position: absolute;
+    pointer-events: none;
+    z-index: 25;
+    filter: drop-shadow(4px 4px 8px rgba(0, 0, 0, .40));
+}
+
+.dec-mariposas-sup-der {
+    width: clamp(90px, 16vw, 148px);
+    top: -28px;
+    right: -12px;
+    transform: rotate(7deg);
+    animation: balanceo-dec 4s ease-in-out infinite;
+}
+
+.dec-flores-inf-izq {
+    width: clamp(85px, 15vw, 132px);
+    bottom: -18px;
+    left: -22px;
+    transform: rotate(-11deg);
+    animation: balanceo-dec 5s ease-in-out 1s infinite;
+}
+
+.dec-estampilla {
+    width: clamp(50px, 8vw, 75px);
+    top: 20%;
+    left: -16px;
+    transform: rotate(-5deg);
+    z-index: 22;
+    filter: drop-shadow(2px 3px 6px rgba(0, 0, 0, .32));
+    animation: balanceo-dec 6s ease-in-out 2s infinite;
+}
+
+
+/* ================================================================
+   9. ESCENA FINAL — DEDICATORIA
+   ================================================================ */
+#escena-final {
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    overflow: visible;
+}
+
+.escena-final-lienzo {
+    position: relative;
+    z-index: 2;
+    width: min(560px, 92vw);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    max-height: 92vh;
+    overflow-y: auto;
+    overflow-x: visible;
+    padding: 20px 30px 40px;
+}
+
+.escena-final-lienzo::-webkit-scrollbar {
+    width: 0;
+}
+
+.escena-final-lienzo {
+    scrollbar-width: none;
+}
+
+.ramo-grande {
+    width: clamp(180px, 45vw, 280px);
+    pointer-events: none;
+    filter: drop-shadow(6px 6px 12px rgba(0, 0, 0, .50));
+    transform: rotate(-3deg);
+    position: relative;
+    z-index: 10;
+    margin-bottom: -40px;
+}
+
+.dedicatoria-panel {
+    position: relative;
+    z-index: 8;
+    width: 100%;
+    background-color: var(--papel);
+    background-image:
+        radial-gradient(ellipse 55% 45% at 25% 28%, rgba(180, 130, 60, .09) 0%, transparent 65%),
+        radial-gradient(ellipse 45% 55% at 78% 72%, rgba(160, 110, 40, .08) 0%, transparent 62%),
+        repeating-linear-gradient(180deg, transparent, transparent 28px,
+            rgba(150, 110, 50, .05) 28px, rgba(150, 110, 50, .05) 29px);
+    border: 1px solid var(--papel-borde);
+    border-radius: 3px;
+    padding: 3rem 2.4rem 2.2rem;
+    box-shadow: 4px 6px 0 rgba(160, 110, 40, .14), 8px 12px 28px rgba(30, 15, 0, .22);
+    transform: rotate(.5deg);
+}
+
+.dedicatoria-panel::before {
+    content: '';
+    position: absolute;
+    top: -12px;
+    left: -2px;
+    right: -2px;
+    height: 16px;
+    background: var(--papel);
+    clip-path: polygon(0% 55%, 3% 15%, 6% 68%, 9% 22%, 12% 60%, 15% 10%,
+            18% 65%, 21% 20%, 24% 55%, 27% 5%, 30% 68%, 33% 24%,
+            36% 60%, 39% 14%, 42% 64%, 45% 18%, 48% 70%, 51% 26%,
+            54% 62%, 57% 8%, 60% 66%, 63% 20%, 66% 56%, 69% 12%,
+            72% 68%, 75% 24%, 78% 60%, 81% 16%, 84% 64%, 87% 20%,
+            90% 58%, 93% 14%, 96% 62%, 99% 18%, 100% 45%,
+            100% 100%, 0% 100%);
+    z-index: 6;
+    pointer-events: none;
+}
+
+.washi--ded-tl {
+    top: -11px;
+    left: 28px;
+    width: 70px;
+    background: var(--w-celeste);
+    transform: rotate(-7deg);
+    box-shadow: 1px 2px 5px rgba(0, 0, 0, .12);
+}
+
+.washi--ded-tr {
+    top: -11px;
+    right: 40px;
+    width: 70px;
+    background: var(--w-melocoton);
+    transform: rotate(5deg);
+    box-shadow: 1px 2px 5px rgba(0, 0, 0, .12);
+}
+
+.dedicatoria-texto {
+    font-family: var(--f-script);
+    font-size: clamp(1.25rem, 3.5vw, 1.65rem);
+    font-weight: 500;
+    color: var(--tinta);
+    line-height: 1.85;
+    text-align: center;
+    opacity: 0;
+    will-change: opacity, transform;
+}
+
+.dedicatoria-texto em {
+    font-style: italic;
+    color: var(--dorado-osc);
+    font-weight: 700;
+}
+
+.dedicatoria-firma {
+    font-family: var(--f-script);
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    color: var(--texto-suave);
+    text-align: right;
+    margin-top: 1.2rem;
+    letter-spacing: .04em;
+    opacity: 0;
+    will-change: opacity;
+}
+
+.sticker {
+    position: absolute;
+    pointer-events: none;
+    filter: drop-shadow(3px 3px 7px rgba(0, 0, 0, .35));
+    will-change: opacity, transform;
+    opacity: 0;
+}
+
+.sticker--corazon-gde {
+    width: clamp(55px, 10vw, 80px);
+    top: 12%;
+    right: -28px;
+    transform: rotate(14deg);
+}
+
+.sticker--estrellas {
+    width: clamp(50px, 9vw, 72px);
+    top: 38%;
+    left: -24px;
+    transform: rotate(-12deg);
+}
+
+.sticker--tequiero {
+    width: clamp(75px, 14vw, 110px);
+    top: -5%;
+    left: 10%;
+    transform: rotate(-8deg);
+}
+
+.sticker--matasellos {
+    width: clamp(55px, 10vw, 78px);
+    bottom: 8%;
+    right: -20px;
+    transform: rotate(10deg);
+}
+
+.sticker--corazon-mini {
+    width: clamp(32px, 6vw, 48px);
+    bottom: 18%;
+    left: -14px;
+    transform: rotate(-16deg);
+}
+
+.sticker--polaroid {
+    width: clamp(60px, 11vw, 88px);
+    top: 25%;
+    right: -30px;
+    transform: rotate(8deg);
+}
+
+
+/* ================================================================
+   10. KEYFRAMES
+   ================================================================ */
+
+@keyframes flotar {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes latido {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.036);
+    }
+}
+
+@keyframes fade-in-mar {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes vuelo-der {
+    0% {
+        left: -12%;
+    }
+
+    100% {
+        left: 112%;
+    }
+}
+
+@keyframes vuelo-izq {
+    0% {
+        left: 112%;
+    }
+
+    100% {
+        left: -12%;
+    }
+}
+
+@keyframes ondula-v {
+    0% {
+        margin-top: 0;
+    }
+
+    25% {
+        margin-top: -22px;
+    }
+
+    50% {
+        margin-top: 0;
+    }
+
+    75% {
+        margin-top: 18px;
+    }
+
+    100% {
+        margin-top: 0;
+    }
+}
+
+@keyframes aleteo {
+    from {
+        transform: scaleY(1);
+    }
+
+    to {
+        transform: scaleY(.80);
+    }
+}
+
+@keyframes balanceo-dec {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Tira: -50% = altura del grupo A, loop invisible gracias al grupo B */
+@keyframes tira-sube {
+    0% {
+        transform: translateY(0);
+    }
+
+    100% {
+        transform: translateY(-50%);
+    }
+}
+
+@keyframes aparecer-particula {
+    0% {
+        opacity: 0;
+        transform: translateY(0) scale(.4) rotate(0deg);
+    }
+
+    18% {
+        opacity: 1;
+    }
+
+    78% {
+        opacity: .5;
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-95px) scale(1.1) rotate(195deg);
+    }
+}
+
+
+/* ================================================================
+   11. RESPONSIVE
+   ================================================================ */
+@media (max-width: 700px) {
+    .tira-vintage {
+        position: fixed;
+        top: auto;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        width: 100%;
+        height: 86px;
+        transform: none;
+        transform-origin: center;
+        border-radius: 4px 4px 0 0;
+        overflow: hidden;
+        /* se mantiene para layout horizontal */
+        flex-direction: row;
+    }
+
+    .tira-vintage__borde--top,
+    .tira-vintage__borde--bot {
+        width: 16px;
+        height: 100%;
+        flex-shrink: 0;
+        background-image: repeating-radial-gradient(ellipse 5px 5px at center, #000 0%, #000 50%, transparent 50%);
+        background-size: 14px 16px;
+        background-position: 4px 6px;
+        background-repeat: repeat-y;
+        border: none;
+    }
+
+    .tira-vintage__borde--top {
+        border-right: 1px solid #1e1e1e;
+    }
+
+    .tira-vintage__borde--bot {
+        border-left: 1px solid #1e1e1e;
+    }
+
+    .tira-vintage__carrete {
+        flex-direction: row;
+        flex: 1;
+        padding: 4px;
+        gap: 4px;
+        animation-name: tira-corre;
+    }
+
+    .tira-foto-celda {
+        width: 60px;
+        aspect-ratio: 2/3;
+        flex-shrink: 0;
+    }
+
+    .tira-vintage::before {
+        top: -8px;
+        left: 14%;
+        width: 55px;
+        height: 16px;
+        transform: rotate(3deg);
+        bottom: auto;
+    }
+
+    .tira-vintage::after {
+        top: -8px;
+        left: 58%;
+        bottom: auto;
+        width: 55px;
+        height: 16px;
+        transform: rotate(-4deg);
+    }
+
+    .escena3-lienzo {
+        padding-bottom: 100px;
+    }
+
+    .sticker--corazon-gde {
+        right: -14px;
+    }
+
+    .sticker--estrellas {
+        left: -12px;
+    }
+
+    .sticker--polaroid {
+        right: -14px;
+    }
+
+    .sticker--matasellos {
+        right: -10px;
+    }
+}
+
+@keyframes tira-corre {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+@media (max-width: 480px) {
+    :root {
+        --sobre-w: 270px;
+        --sobre-h: 180px;
+    }
+
+    .escena-1__contenido {
+        padding: 1.6rem 1.8rem;
+    }
+
+    .pergamino {
+        padding: 1.8rem 1.4rem 1.6rem;
+    }
+
+    .dedicatoria-panel {
+        padding: 2.6rem 1.6rem 1.8rem;
+    }
+}
+
+@media (max-width: 360px) {
+    :root {
+        --sobre-w: 240px;
+        --sobre-h: 160px;
+    }
+}

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Feliz Día de las Flores Amarillas</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Dancing+Script:wght@500;600;700&family=Caveat:wght@400;600;700&display=swap"
+        rel="stylesheet" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js" defer></script>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+    <!-- ============================================================
+     MARIPOSAS GLOBALES — vuelan sobre todas las escenas
+     → Reemplaza mariposa.gif con tu GIF real de fondo transparente
+     ============================================================ -->
+    <div id="mariposas-container" aria-hidden="true">
+        <img src="mariposas1.gif" class="mariposa-gif" alt="" data-lane="0" />
+        <img src="mariposas1.gif" class="mariposa-gif" alt="" data-lane="1" />
+        <img src="mariposas1.gif" class="mariposa-gif" alt="" data-lane="2" />
+        <img src="mariposas1.gif" class="mariposa-gif" alt="" data-lane="3" />
+    </div>
+
+    <div id="app-container">
+
+        <!-- ==========================================================
+       ESCENA 1 — Bienvenida
+       ========================================================== -->
+        <section id="escena-1">
+
+            <div class="esquina-scrap esquina-scrap--tl" aria-hidden="true"></div>
+            <div class="esquina-scrap esquina-scrap--tr" aria-hidden="true"></div>
+            <div class="esquina-scrap esquina-scrap--bl" aria-hidden="true"></div>
+            <div class="esquina-scrap esquina-scrap--br" aria-hidden="true"></div>
+
+            <div class="escena-1__contenido">
+                <h1 class="escena-1__titulo">
+                    Querida Joss, esto es para ti
+                </h1>
+
+                <button id="btn-empezar" type="button">Cómo así</button>
+            </div>
+
+        </section>
+
+
+        <!-- ==========================================================
+       ESCENA 2 — El Sobre
+       ========================================================== -->
+        <section id="escena-2" aria-hidden="true">
+
+            <div id="escena2-particulas" aria-hidden="true"></div>
+
+            <div class="escena-2__contenido">
+
+                <p class="escena-2__subtitulo">
+                    No podía quedarme así como así, no puedo hacer mucho ahora pero...<br>Tampoco quería dejar pasar
+                    el día sin hacerte saber que te quiero mucho, quizá no sea la gran cosa pero es especial para
+                    ti, linda Joss!
+                </p>
+
+                <!--
+        SOBRE — Stacking context (z-index estricto):
+          z-1  .sobre-espalda   → fondo del sobre + pliegues traseros
+          z-2  .carta           → carta interior oculta
+          z-3  .sobre-frente    → base sólida, sello de cera, matasellos
+          z-4  .solapa          → tapa que rota al abrir
+      -->
+                <div class="sobre-contenedor" id="sobre-contenedor" role="button" tabindex="0"
+                    aria-label="Sobre cerrado. Haz clic para abrirlo.">
+
+                    <div class="sobre-espalda"></div>
+
+                    <div class="carta" aria-hidden="true">
+                        <div class="carta__motivo"></div>
+                        <span class="carta__preview-texto">Para ti...</span>
+                    </div>
+
+                    <div class="sobre-frente">
+                        <div class="sobre-frente__sello" aria-label="Sello de cera">
+                            <span class="sello__inicial">🤍</span>
+                        </div>
+                        <div class="matasellos" aria-hidden="true">
+                            <span class="matasellos__texto">Para Joss</span>
+                        </div>
+                    </div>
+
+                    <div class="solapa"></div>
+
+                </div>
+
+                <p class="escena-2__hint" id="hint-abrir" aria-live="polite">
+                    Toca el sobre para abrirlo
+                </p>
+
+            </div>
+        </section>
+
+
+        <!-- ==========================================================
+       ESCENA 3 — Scrapbook Vintage
+
+       ARQUITECTURA DE CAPAS (z-index de menor a mayor):
+         .pergamino             z-5   → papel principal con texto
+         .tira-vintage          z-15  → rollo fotográfico, rotado,
+                                        overflow:hidden propio
+         .decoracion-transparente z-25 → GIFs/PNGs decorativos
+       ========================================================== -->
+        <section id="escena-3" aria-hidden="true">
+
+            <div id="escena3-particulas" aria-hidden="true"></div>
+
+            <!--
+      .escena3-lienzo: SIN overflow:hidden para que la tira
+      pueda sobresalir como collage. El recorte de las fotos
+      ocurre dentro de .tira-vintage con su propio overflow:hidden.
+    -->
+            <div class="escena3-lienzo">
+
+                <!-- ======================================================
+           PERGAMINO — papel principal de la carta
+           ====================================================== -->
+                <article class="pergamino" id="pergamino" aria-label="Carta">
+
+                    <div class="washi washi--p-tl" aria-hidden="true"></div>
+                    <div class="washi washi--p-tr" aria-hidden="true"></div>
+                    <div class="washi washi--p-bm" aria-hidden="true"></div>
+
+                    <div class="pergamino__cabecera">
+                        <span class="pergamino__fecha">21 · 03 · 2026</span>
+                    </div>
+
+                    <div class="pergamino__cuerpo" id="carta-cuerpo">
+                        <p class="carta-linea">Hoy es un día especial porque es un día más contigo, y no podía dejar
+                            pasarlo.</p>
+                        <p class="carta-linea">Así que hice para ti, mi linda Jossi.</p>
+                        <p class="carta-linea carta-linea--esp"></p>
+                        <p class="carta-linea">¿Cuánta distancia habrá entre tú y yo?, ¿te has puesto a pensarlo? pero
+                            yo no lo pienso así, si siempre te siento cerca.</p>
+                        <p class="carta-linea">Y es por una sencilla razón, cada vez que pienso en ti, es como si
+                            estuvieras a mi lado. Conmigo. </p>
+                        <p class="carta-linea">Te parecerá tonto quizá, quizá exagerando, pero para mi es una sensación
+                            muy linda, como si fuera una calidez muy que me da fuerza.</p>
+                        <p class="carta-linea carta-linea--esp"></p>
+                        <p class="carta-linea">Así como las flores necesitan al sol, yo te necesito a ti, </p>
+                        <p class="carta-linea">y así como el sol ilumina a las flores, tú iluminas mi vida.</p>
+                        <p class="carta-linea">Te has convertido en lo más importante y en lo más especial para mi.
+                            Siempre estaré agradecido con Dios por ponerte en mi camino.</p>
+                        <p class="carta-linea carta-linea--esp"></p>
+                        <p class="carta-linea">Un dia la distancia teminará, el tiempo llegará a su fin, la espera
+                            terminará, </p>
+                        <p class="carta-linea">y nosotros estaremos juntos, sin nada que nos separe.</p>
+                        <p class="carta-linea">Sin distancias, ni esperas, ni dudas, ni miedos.</p>
+                        <p class="carta-linea">Solo tú y yo, mi calido y gentil solecito.</p>
+                        <p class="carta-linea carta-linea--esp"></p>
+                        <p class="carta-linea carta-linea--firma">
+                            ¡Es una promesa!
+                        </p>
+                    </div>
+
+                    <!-- GIF de cierre → Reemplaza gif-cierre.gif con tu GIF favorito -->
+                    <div class="gif-cierre-wrap" id="gif-cierre-wrap" aria-hidden="true">
+                        <img src="r.gif" class="gif-cierre" alt="Un momento tierno para ti" />
+                        <p class="gif-cierre__leyenda">(Pronto muy pronto)</p>
+                    </div>
+
+                </article>
+
+
+                <!-- ======================================================
+           TIRA FOTOGRÁFICA VINTAGE
+           ──────────────────────────────────────────────────────
+           Estructura de loop seamless:
+             • Grupo A (fotos 1–5): las fotos reales del usuario
+             • Grupo B (fotos 1–5): copia exacta de A
+           La animación translateY desplaza todo el carrete.
+           Cuando el grupo A sale por arriba, el grupo B ya
+           ocupa su lugar visualmente → corte invisible.
+           overflow:hidden en .tira-vintage recorta las fotos.
+
+           → Reemplaza foto1.jpg … foto5.jpg con tus imágenes reales.
+           ====================================================== -->
+                <div class="tira-vintage" aria-hidden="true">
+
+                    <div class="tira-vintage__borde tira-vintage__borde--top"></div>
+
+                    <div class="tira-vintage__carrete">
+
+                        <!-- ── GRUPO A (5 fotos únicas originales) ── -->
+                        <figure class="tira-foto-celda">
+                            <!-- foto1 → Reemplaza src con foto1.jpg -->
+                            <img src="j1.jpeg" alt="Foto 1" />
+                        </figure>
+                        <figure class="tira-foto-celda tira-foto-celda--incl">
+                            <!-- foto2 → Reemplaza src con foto2.jpg -->
+                            <img src="j2.jpeg" alt="Foto 2" />
+                        </figure>
+                        <figure class="tira-foto-celda">
+                            <!-- foto3 → Reemplaza src con foto3.jpg -->
+                            <img src="j3.jpeg" alt="Foto 3" />
+                        </figure>
+                        <figure class="tira-foto-celda tira-foto-celda--incl">
+                            <!-- foto4 → Reemplaza src con foto4.jpg -->
+                            <img src="j4.jpeg" alt="Foto 4" />
+                        </figure>
+                        <figure class="tira-foto-celda">
+                            <!-- foto5 → Reemplaza src con foto5.jpg -->
+                            <img src="j5.jpeg" alt="Foto 5" />
+                        </figure>
+
+                        <!-- ── GRUPO B (copia exacta de A para loop sin corte) ── -->
+                        <figure class="tira-foto-celda">
+                            <!-- foto1 → Reemplaza src con foto1.jpg -->
+                            <img src="j1.jpeg" alt="Foto 1" />
+                        </figure>
+                        <figure class="tira-foto-celda tira-foto-celda--incl">
+                            <!-- foto2 → Reemplaza src con foto2.jpg -->
+                            <img src="j2.jpeg" alt="Foto 2" />
+                        </figure>
+                        <figure class="tira-foto-celda">
+                            <!-- foto3 → Reemplaza src con foto3.jpg -->
+                            <img src="j3.jpeg" alt="Foto 3" />
+                        </figure>
+                        <figure class="tira-foto-celda tira-foto-celda--incl">
+                            <!-- foto4 → Reemplaza src con foto4.jpg -->
+                            <img src="j4.jpeg" alt="Foto 4" />
+                        </figure>
+                        <figure class="tira-foto-celda">
+                            <!-- foto5 → Reemplaza src con foto5.jpg -->
+                            <img src="j5.jpeg" alt="Foto 5" />
+                        </figure>
+                    </div><!-- /.tira-vintage__carrete -->
+
+                    <div class="tira-vintage__borde tira-vintage__borde--bot"></div>
+
+                </div><!-- /.tira-vintage -->
+
+
+                <!-- ======================================================
+           DECORACIONES TRANSPARENTES — Escena 3
+           Marcadores numéricos de placeholder mientras el usuario
+           conecta sus propios PNGs/GIFs de fondo transparente.
+           ====================================================== -->
+
+                <!--
+        DEC-1: Mariposas / decoración esquina superior derecha
+        → Reemplaza src con tu GIF/PNG de fondo transparente
+      -->
+                <img src="flores2.gif" class="decoracion-transparente dec-mariposas-sup-der" alt=""
+                    aria-hidden="true" />
+
+                <!--
+        DEC-2: Ramo de flores esquina inferior izquierda
+        → Reemplaza src con tu PNG de ramo, fondo transparente
+      -->
+                <img src="ramo.gif" class="decoracion-transparente dec-flores-inf-izq" alt="" aria-hidden="true" />
+
+                <!--
+        DEC-3: Estampilla decorativa lateral izquierda
+        → Reemplaza src con tu PNG de sello/estampilla, fondo transparente
+      -->
+                <img src="flores1.gif" class="decoracion-transparente dec-estampilla" alt="" aria-hidden="true" />
+
+            </div><!-- /.escena3-lienzo -->
+
+        </section>
+
+
+        <!-- ==========================================================
+       ESCENA FINAL — Dedicatoria
+       ========================================================== -->
+        <section id="escena-final" aria-hidden="true">
+
+            <div id="escena-final-particulas" aria-hidden="true"></div>
+
+            <div class="escena-final-lienzo">
+
+                <!--
+        RAMO GRANDE — centro superior de la dedicatoria
+        → Reemplaza src con tu PNG de ramo grande, fondo transparente
+        El filter:drop-shadow respeta la silueta recortada del PNG.
+      -->
+                <img src="ramo2.png" class="ramo-grande" alt="Ramo de flores amarillas" aria-hidden="true" />
+
+                <!-- Panel de dedicatoria -->
+                <div class="dedicatoria-panel">
+
+                    <div class="washi washi--ded-tl" aria-hidden="true"></div>
+                    <div class="washi washi--ded-tr" aria-hidden="true"></div>
+
+                    <p class="dedicatoria-texto" id="dedicatoria-texto">
+                        Hay cosas que la distancia no puede borrar.<br>
+                        Mi amor por ti es una de ellas.<br><br>
+                        Feliz día, <em>mi Joss.</em>
+                    </p>
+
+                    <p class="dedicatoria-firma">— Con todo mi amor, Davicito</p>
+
+                </div>
+
+                <!-- ======================================================
+           STICKERS decorativos — Escena Final
+           Marcadores numéricos de placeholder.
+           Todos los stickers usan filter:drop-shadow para volumen.
+           → Reemplaza cada src con tu PNG/sticker de fondo transparente.
+           ====================================================== -->
+
+                <!--
+        STICKER-1: Corazón grande — derecha alta
+        → Reemplaza con sticker-corazon-grande.png
+      -->
+                <img src="q2.gif" class="sticker sticker--corazon-gde" alt="" aria-hidden="true" />
+
+                <!--
+        STICKER-2: Estrellas — izquierda media
+        → Reemplaza con sticker-estrellas.png
+      -->
+                <img src="q4.gif" class="sticker sticker--estrellas" alt="" aria-hidden="true" />
+
+                <!--
+        STICKER-3: Etiqueta "Te Quiero" — superior izquierda
+        → Reemplaza con sticker-tequiero.png
+      -->
+                <img src="q2.gif" class="sticker sticker--tequiero" alt="" aria-hidden="true" />
+
+                <!--
+        STICKER-4: Matasellos corazón — inferior derecha
+        → Reemplaza con sticker-matasellos.png
+      -->
+                <img src="q3.gif" class="sticker sticker--matasellos" alt="" aria-hidden="true" />
+
+                <!--
+        STICKER-5: Corazón mini — inferior izquierda
+        → Reemplaza con sticker-corazon-mini.png
+      -->
+                <img src="q3.gif" class="sticker sticker--corazon-mini" alt="" aria-hidden="true" />
+
+                <!--
+        STICKER-6: Polaroid mini — derecha media
+        → Reemplaza con sticker-polaroid.png
+      -->
+                <img src="q5.gif" class="sticker sticker--polaroid" alt="" aria-hidden="true" />
+
+            </div><!-- /.escena-final-lienzo -->
+
+        </section>
+
+    </div><!-- /#app-container -->
+    <script src="script.js"></script>
+</body>
+
+</html>
